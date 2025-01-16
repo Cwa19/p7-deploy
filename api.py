@@ -69,7 +69,7 @@ nom_utilisateur = "Cwa19"
 nom_repo = "Projet7_Final2"
 chemin_dossier = "data"
 
-taille = None #1000
+taille = 1000
 data        = charger_et_concatener_fichiers_github(nom_utilisateur, nom_repo, chemin_dossier, 'test_df', nrows=taille)
 data_train  = charger_et_concatener_fichiers_github(nom_utilisateur, nom_repo, chemin_dossier, 'train_df_', nrows=taille)
 X_train     = charger_et_concatener_fichiers_github(nom_utilisateur, nom_repo, chemin_dossier, 'X_train_', nrows=taille)
@@ -207,4 +207,4 @@ def shap_values():
 
 
 if __name__ == '__main__':
-    uvicorn.run(app, host='127.0.0.1', port=8000)
+    uvicorn.run(app, host='0.0.0.0', port=8000)
