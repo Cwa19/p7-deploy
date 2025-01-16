@@ -20,13 +20,13 @@ read -p "Entrez le message de commit: " commit_message
 # Effectuer le commit
 git commit -m "$commit_message"
 # Pousser les modifications vers le dépôt distant
-git push -u origin master
+git push -u origin main
 echo "Les modifications ont été envoyées sur GitHub."
 
 
 
 
-NOUVEAU
+
 
 
 
