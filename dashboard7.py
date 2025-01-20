@@ -17,7 +17,7 @@ import dash_bootstrap_components as dbc
 
 
 # URL de l'API
-API_URL = 'http://13.50.190.217:8000/' #'http://127.0.0.1:8000/'  # "http://3.84.177.36:8000/"  # Remplacez par votre URL d'API
+API_URL = 'http://127.0.0.1:8000/' #'http://127.0.0.1:8000/'  # "http://3.84.177.36:8000/"  # Remplacez par votre URL d'API
 
 # ------------------------------------------------------------------------------------------------------------
 # Chargement du modèle et des données
@@ -57,6 +57,7 @@ def charger_et_concatener_fichiers_github(nom_utilisateur, nom_repo, chemin_doss
             if fichier["name"].lower().endswith('.csv') and mot_cle in fichier["name"]:
                 contenu = requests.get(fichier["download_url"]).text
                 dataframe = pd.read_csv(StringIO(contenu), nrows=nrows)
+                dataframe = dataframe.loc[:, ~dataframe.columns.str.contains('Unnamed')]
                 fichiers_csv.append(dataframe)
 
         if not fichiers_csv:
@@ -79,6 +80,12 @@ data_test = charger_et_concatener_fichiers_github(nom_utilisateur, nom_repo, che
 data_train = charger_et_concatener_fichiers_github(nom_utilisateur, nom_repo, chemin_dossier, 'train_df_', nrows=taille)
 X_train = charger_et_concatener_fichiers_github(nom_utilisateur, nom_repo, chemin_dossier, 'X_train_1', nrows=taille)
 
+# Supprimer la colonne 'Unnamed: 0' si elle existe
+
+# X_train = X_train[:, ~X_train.columns.str.contains('SUnnamed')]
+
+
+
 print('data_test   :', data_test.shape)
 # print('data_train  :', data_train.shape)
 # print('X_train     :', X_train.shape)
@@ -90,10 +97,10 @@ scaler.fit(X_train[cols])
 listvar = X_train.columns.tolist()
 
 # Sélection des colonnes numériques pour la mise à l'échelle
-data_test_scaled = data_test[listvar].copy()
+data_test_scaled = data_test.loc[:, listvar].copy()
 data_test_scaled[cols] = scaler.transform(data_test_scaled[cols])
 
-data_train_scaled = data_train[listvar].copy()
+data_train_scaled = data_train.loc[:, listvar].copy()
 data_train_scaled[cols] = scaler.transform(data_train[cols])
 
 # Initialisation de l'explainer Shapley pour les valeurs locales

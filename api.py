@@ -52,6 +52,7 @@ def charger_et_concatener_fichiers_github(nom_utilisateur, nom_repo, chemin_doss
             if fichier["name"].lower().endswith('.csv') and mot_cle in fichier["name"]:
                 contenu = requests.get(fichier["download_url"]).text
                 dataframe = pd.read_csv(StringIO(contenu), nrows=nrows)
+                dataframe = dataframe.loc[:, ~dataframe.columns.str.contains('Unnamed')]
                 fichiers_csv.append(dataframe)
 
         if not fichiers_csv:
@@ -73,6 +74,11 @@ taille = 1000
 data        = charger_et_concatener_fichiers_github(nom_utilisateur, nom_repo, chemin_dossier, 'test_df', nrows=taille)
 data_train  = charger_et_concatener_fichiers_github(nom_utilisateur, nom_repo, chemin_dossier, 'train_df_', nrows=taille)
 X_train     = charger_et_concatener_fichiers_github(nom_utilisateur, nom_repo, chemin_dossier, 'X_train_', nrows=taille)
+
+# Supprimer la colonne 'Unnamed: 0' si elle existe
+# X_train = X_train[:, ~X_train.columns.str.contains('^Unnamed')]
+# data_train = data_train.loc[:, ~data_train.columns.str.contains('^Unnamed')]
+# data = data.loc[:, ~data.columns.str.contains('^Unnamed')]
 
 print('data   :', data.shape)
 
